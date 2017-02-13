@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: codelab-auth-service
+  cloud:
+    config:
+      uri: http://codelab-config:20088
+      password: ${CODELAB_PASS}
+      fail-fast: true
+      username: ${CODELAB_USER}
