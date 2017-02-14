@@ -1,9 +1,10 @@
 version: '2'
 services:
-  auth-mongodb:
+  codelab-auth-mongodb:
     environment:
       CODELAB_USER: $CODELAB_USER
       CODELAB_PASS: $CODELAB_PASS
+      INIT_DUMP: data.js
     build: mongodb
     ports:
       - 20184:27017

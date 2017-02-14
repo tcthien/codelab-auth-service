@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,5 +32,10 @@ public class UserController {
     public void createUser(@Valid @RequestBody User user) {
         userService.create(user);
     }
-    
+
+    @RequestMapping(value="/registration", method = RequestMethod.POST)
+    public String registration(@Valid @RequestBody User user) {
+        userService.create(user);
+        return JSONObject.quote("success");
+    }
 }
