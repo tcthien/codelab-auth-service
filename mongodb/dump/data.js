@@ -5,10 +5,10 @@
 print('dump start');
 
 db.users.update(
-    { "_id": "1" },
+    { "_id": "tcthien" },
     {
-	    "_id": "1",
-	    "password": "",
+	    "_id": "tcthien",
+	    "password": "$2a$10$vPBKiz7Jo9n/VRDr0ZaHTe.y6CaxTlhLTTxhIMYLXSSjnuj8978Ra"/*tcthien*/,
 	    "fullName": "Thien Tran",
 	    "email": "thientran1986@gmail.com"
     },
