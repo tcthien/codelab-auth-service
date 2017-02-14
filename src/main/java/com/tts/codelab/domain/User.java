@@ -2,6 +2,9 @@ package com.tts.codelab.domain;
 
 import java.util.Collection;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,9 +15,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 
     @Id
+    @NotNull
     private String username;
+
+    @NotNull
+    @Length(min = 6, max = 40)
     private String password;
+    
+    @NotNull
     private String fullName;
+
+    @NotNull
     private String email;
 
     @Override
@@ -22,7 +33,7 @@ public class User implements UserDetails {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -31,7 +42,7 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-    
+
     public void setUsername(String username) {
         this.username = username;
     }
