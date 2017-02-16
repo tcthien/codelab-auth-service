@@ -4,7 +4,6 @@ import java.security.Principal;
 
 import javax.validation.Valid;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +21,6 @@ public class UserController {
     @Autowired
     private UserService userService;
     
-    @PreAuthorize("#oauth2.hasScope('read')")
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     public Principal getUser(Principal principal) {
         return principal;
@@ -32,11 +30,5 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public void createUser(@Valid @RequestBody User user) {
         userService.create(user);
-    }
-
-    @RequestMapping(value="/registration", method = RequestMethod.POST)
-    public String registration(@Valid @RequestBody User user) {
-        userService.create(user);
-        return JSONObject.quote("success");
     }
 }

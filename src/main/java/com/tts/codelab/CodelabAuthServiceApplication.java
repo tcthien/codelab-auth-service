@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,80 +19,27 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
 import com.tts.codelab.service.MongoUserDetailService;
 
+
 @SpringBootApplication
+@EnableResourceServer
 @EnableDiscoveryClient
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CodelabAuthServiceApplication {
 
-    private static final String RESOURCE_ID_CODELAB = "codelab-id";
-    
     public static void main(String[] args) {
         SpringApplication.run(CodelabAuthServiceApplication.class, args);
     }
-    
-    @Configuration
-    @EnableAuthorizationServer
-    protected static class AuthorizationServer extends AuthorizationServerConfigurerAdapter{
-        
-        private TokenStore tokenStore = new InMemoryTokenStore();
-        
-        @Autowired
-        @Qualifier("authenticationManagerBean")
-        private AuthenticationManager authenticationManager;
-        
-        @Autowired
-        private MongoUserDetailService userDetailsService;
 
-        @Override
-        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-            // @formatter:off
-            endpoints
-                .tokenStore(tokenStore)
-                .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
-            // @formatter:on
-        }
-        
-        @Override
-        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-            // @formatter:off
-            clients
-                .inMemory()
-                    .withClient("sampleClientId")
-                        .authorizedGrantTypes("password")
-                        .scopes("read")
-                        .autoApprove(true)
-                    .and()
-                    .withClient("clientIdPassword")
-                        .secret("secret")
-                        .authorizedGrantTypes("password","authorization_code", "refresh_token")
-                        .scopes("read");
-            // @formatter:on
-
-        }
-        
-        @Override
-        public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-            // @formatter:off
-            security
-                .tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
-            // @formatter:on
-        }
-    }
-    
     @Configuration
     @EnableWebSecurity
-    protected static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    protected static class webSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Autowired
         private MongoUserDetailService userDetailsService;
@@ -100,30 +48,70 @@ public class CodelabAuthServiceApplication {
         protected void configure(HttpSecurity http) throws Exception {
             // @formatter:off
             http
-            .csrf().disable()
-            .anonymous().disable()
-            .authorizeRequests()
-                .antMatchers("/users/registration", "/oauth/token").permitAll()
-                .anyRequest().authenticated();
+                .authorizeRequests().anyRequest().authenticated()
+            .and()
+                .csrf().disable();
             // @formatter:on
         }
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            // @formatter:off
-            auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
-//            auth
-//                .inMemoryAuthentication()
-//                    .withUser("tcthien").password("tcthien").roles("USER");
-            // @formatter:on
+            auth.userDetailsService(userDetailsService)
+                    .passwordEncoder(new BCryptPasswordEncoder());
         }
 
         @Override
         @Bean
         public AuthenticationManager authenticationManagerBean() throws Exception {
             return super.authenticationManagerBean();
+        }
+    }
+
+    @Configuration
+    @EnableAuthorizationServer
+    protected static class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
+
+        private TokenStore tokenStore = new InMemoryTokenStore();
+
+        @Autowired
+        @Qualifier("authenticationManagerBean")
+        private AuthenticationManager authenticationManager;
+
+        @Autowired
+        private MongoUserDetailService userDetailsService;
+
+        @Autowired
+        private Environment env;
+
+        @Override
+        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+            // @formatter:off
+            clients.inMemory()
+                    .withClient("browser")
+                    .secret(env.getProperty("CODELAB_PASS"))
+                    .authorizedGrantTypes("refresh_token", "password")
+                    .scopes("ui")
+            .and()
+                    .withClient("account-service")
+                    .secret(env.getProperty("CODELAB_PASS"))
+                    .authorizedGrantTypes("client_credentials", "refresh_token")
+                    .scopes("server");
+            // @formatter:on
+        }
+
+        @Override
+        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+            endpoints
+                    .tokenStore(tokenStore)
+                    .authenticationManager(authenticationManager)
+                    .userDetailsService(userDetailsService);
+        }
+
+        @Override
+        public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+            oauthServer
+                    .tokenKeyAccess("permitAll()")
+                    .checkTokenAccess("isAuthenticated()");
         }
     }
 }
