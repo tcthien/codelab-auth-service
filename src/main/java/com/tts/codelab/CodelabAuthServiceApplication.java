@@ -87,15 +87,20 @@ public class CodelabAuthServiceApplication {
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             // @formatter:off
             clients.inMemory()
-                    .withClient("browser")
-                    .secret(env.getProperty("CODELAB_PASS"))
-                    .authorizedGrantTypes("refresh_token", "password")
-                    .scopes("ui")
+                .withClient("browser")
+                .secret(env.getProperty("CODELAB_PASS"))
+                .authorizedGrantTypes("refresh_token", "password")
+                .scopes("ui")                                               
             .and()
-                    .withClient("account-service")
-                    .secret(env.getProperty("CODELAB_PASS"))
-                    .authorizedGrantTypes("client_credentials", "refresh_token")
-                    .scopes("server");
+                .withClient("codelab-account-service")
+                .secret(env.getProperty("CODELAB_PASS"))
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server")
+            .and()
+                .withClient("codelab-article-service")
+                .secret(env.getProperty("CODELAB_PASS"))
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server");
             // @formatter:on
         }
 
