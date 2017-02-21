@@ -1,6 +1,5 @@
-package com.tts.codelab.domain;
+package com.tts.codelab.auth.domain;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.validation.constraints.NotNull;
@@ -29,11 +28,10 @@ public class User implements UserDetails {
     @NotNull
     private String email;
     
-    private String role = "USER";
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new UserAuthority(role));
+        return null;
     }
 
     public void setPassword(String password) {

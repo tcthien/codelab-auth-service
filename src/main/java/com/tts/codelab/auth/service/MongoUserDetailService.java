@@ -1,4 +1,4 @@
-package com.tts.codelab.service;
+package com.tts.codelab.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 

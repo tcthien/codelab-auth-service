@@ -1,4 +1,4 @@
-package com.tts.codelab.controller;
+package com.tts.codelab.auth.controller;
 
 import java.security.Principal;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tts.codelab.domain.User;
-import com.tts.codelab.service.UserService;
+import com.tts.codelab.auth.domain.User;
+import com.tts.codelab.auth.service.UserService;
 
 @RestController
 @RequestMapping("/users")

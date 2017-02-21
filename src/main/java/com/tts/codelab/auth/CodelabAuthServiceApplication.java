@@ -1,4 +1,4 @@
-package com.tts.codelab;
+package com.tts.codelab.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,7 +24,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
-import com.tts.codelab.service.MongoUserDetailService;
+import com.tts.codelab.auth.service.MongoUserDetailService;
 
 
 @SpringBootApplication
@@ -41,8 +41,8 @@ public class CodelabAuthServiceApplication {
     @EnableWebSecurity
     protected static class webSecurityConfig extends WebSecurityConfigurerAdapter {
 
-        @Autowired
-        private MongoUserDetailService userDetailsService;
+      @Autowired
+      private MongoUserDetailService userDetailsService;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -85,22 +85,29 @@ public class CodelabAuthServiceApplication {
 
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+
+            // TODO persist clients details
+
             // @formatter:off
             clients.inMemory()
-                .withClient("browser")
-                .secret(env.getProperty("CODELAB_PASS"))
-                .authorizedGrantTypes("refresh_token", "password")
-                .scopes("ui")                                               
+                    .withClient("browser")
+                    .authorizedGrantTypes("refresh_token", "password")
+                    .scopes("ui")
             .and()
-                .withClient("codelab-account-service")
-                .secret(env.getProperty("CODELAB_PASS"))
-                .authorizedGrantTypes("client_credentials", "refresh_token")
-                .scopes("server")
+                    .withClient("account-service")
+                    .secret(env.getProperty("ACCOUNT_SERVICE_PASSWORD"))
+                    .authorizedGrantTypes("client_credentials", "refresh_token")
+                    .scopes("server")
             .and()
-                .withClient("codelab-article-service")
-                .secret(env.getProperty("CODELAB_PASS"))
-                .authorizedGrantTypes("client_credentials", "refresh_token")
-                .scopes("server");
+                    .withClient("statistics-service")
+                    .secret(env.getProperty("STATISTICS_SERVICE_PASSWORD"))
+                    .authorizedGrantTypes("client_credentials", "refresh_token")
+                    .scopes("server")
+            .and()
+                    .withClient("notification-service")
+                    .secret(env.getProperty("NOTIFICATION_SERVICE_PASSWORD"))
+                    .authorizedGrantTypes("client_credentials", "refresh_token")
+                    .scopes("server");
             // @formatter:on
         }
 

@@ -1,4 +1,4 @@
-package com.tts.codelab.domain;
+package com.tts.codelab.auth.domain;
 
 import org.springframework.security.core.GrantedAuthority;
 

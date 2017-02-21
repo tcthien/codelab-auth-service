@@ -1,8 +1,8 @@
-package com.tts.codelab.service;
+package com.tts.codelab.auth.service;
 
 import java.util.List;
 
-import com.tts.codelab.domain.User;
+import com.tts.codelab.auth.domain.User;
 
 public interface UserService {
 
