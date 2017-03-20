@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import com.tts.codelab.auth.domain.User;
 import com.tts.codelab.auth.repository.UserRepository;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +22,28 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     private UserRepository repository;
+
+    @Override
+    public void updatePassword(String username, String oldPassword, String newPassword) {
+        String pass = encoder.encode(oldPassword);
+        User existing = repository.findOneByUsernameAndPassword(username, pass);
+        Assert.notNull(existing, "username or password is invalid: " + username + " - " + oldPassword);
+        existing.setPassword(encoder.encode(newPassword));
+        repository.save(existing);
+    }
+
+    @Override
+    public void update(User user) {
+        User existing = repository.findOne(user.getUsername());
+        Assert.notNull(existing, "user not found: " + user.getUsername());
+
+        existing.setFullName(user.getFullName());
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existing.setPassword(encoder.encode(user.getPassword()));
+        }
+        existing.setEmail(user.getEmail());
+        repository.save(existing);
+    }
 
     @Override
     public void create(User user) {
