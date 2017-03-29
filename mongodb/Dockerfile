@@ -7,9 +7,6 @@ ENV https_proxy 'http://10.10.10.10:8080'
 ADD env /env.sh
 ADD init.sh /init.sh
 ADD ./dump /
-
-RUN \
- apt-get install psmisc -y -q && \
  
 RUN \
  chmod +x /init.sh && \
