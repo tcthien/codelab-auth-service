@@ -11,8 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.tts.codelab.auth.CodelabAuthServiceApplication;
 import com.tts.codelab.auth.domain.User;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CodelabAuthServiceApplication.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringApplicationConfiguration(classes = CodelabAuthServiceApplication.class)
 public class UserRepositoryTest {
     
     @Autowired

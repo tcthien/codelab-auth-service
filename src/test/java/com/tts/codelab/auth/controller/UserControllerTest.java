@@ -24,10 +24,10 @@ import com.tts.codelab.auth.CodelabAuthServiceApplication;
 import com.tts.codelab.auth.domain.User;
 import com.tts.codelab.auth.service.UserService;
 
-@SuppressWarnings("restriction")
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CodelabAuthServiceApplication.class)
-@WebAppConfiguration
+//@SuppressWarnings("restriction")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@SpringApplicationConfiguration(classes = CodelabAuthServiceApplication.class)
+//@WebAppConfiguration
 public class UserControllerTest {
 
     private static final ObjectMapper mapper = new ObjectMapper();
