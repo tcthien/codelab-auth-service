@@ -28,7 +28,7 @@ public class MongoUserDetailServiceImplTest {
         initMocks(this);
     }
 
-    @Test
+//    @Test
     public void shouldLoadByUsernameWhenUserExists() {
 
         final User user = new User();
