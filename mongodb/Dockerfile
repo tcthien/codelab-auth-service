@@ -1,9 +1,6 @@
 FROM ubuntu:14.04
 MAINTAINER Thien Tran <thientran1986@gmail.com>
 
-ENV http_proxy 'http://10.10.10.10:8080'
-ENV https_proxy 'http://10.10.10.10:8080'
-
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
     echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list && \
     apt-get update && \
