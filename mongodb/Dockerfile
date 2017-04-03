@@ -19,6 +19,10 @@ ENV JOURNALING yes
 ADD run.sh /run.sh
 ADD set_db_password.sh /set_db_password.sh
 
+RUN \
+ chmod +x /run.sh && \
+ chmod +x /set_db_password.sh
+ 
 EXPOSE 27017 28017
 
 CMD ["/run.sh"]
