@@ -1,5 +1,5 @@
 #!/bin/bash
-source /env.sh
+
 if test -z "$CODELAB_PASS"; then
     echo "CODELAB_PASS not defined"
     exit 1
