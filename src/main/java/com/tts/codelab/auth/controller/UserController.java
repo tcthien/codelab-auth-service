@@ -23,10 +23,11 @@ public class UserController {
         return principal;
     }
 
+    @PreAuthorize("#authentication.name == username")
     @RequestMapping(value = "/pass", method = RequestMethod.PUT)
-    public void updatePassword(@RequestParam("username") String userName, @RequestParam("oldPass") String oldPassword,
-                               @RequestParam("newPass") String newPassword) {
-        userService.updatePassword(userName, oldPassword, newPassword);
+    public void updatePassword(@RequestParam("username") String username, @RequestParam("oldPass") String oldPass,
+                               @RequestParam("newPass") String newPass) {
+        userService.updatePassword(username, oldPass, newPass);
     }
 
     @PreAuthorize("#oauth2.hasScope('server')")
@@ -35,7 +36,7 @@ public class UserController {
         userService.create(user);
     }
 
-    @PreAuthorize("#oauth2.hasScope('server')")
+    @PreAuthorize("#oauth2.hasScope('server') && authentication.name == user.username")
     @RequestMapping(method = RequestMethod.PUT)
     public void updateUser(@Valid @RequestBody User user) {
         userService.update(user);
