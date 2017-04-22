@@ -1,14 +1,15 @@
 package com.tts.codelab.auth.domain;
 
-import java.util.Collection;
-
-import javax.validation.constraints.NotNull;
-
+import com.tts.codelab.auth.Util;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 @Document(collection = "users")
@@ -27,11 +28,21 @@ public class User implements UserDetails {
 
     @NotNull
     private String email;
-    
+
+    @NotNull
+    private Set<String> roles = Util.asSet("USER");
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        return null;
+        return Util.toGrantedAuthority(roles);
     }
 
     public void setPassword(String password) {
